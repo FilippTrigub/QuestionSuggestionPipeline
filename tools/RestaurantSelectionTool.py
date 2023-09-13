@@ -1,0 +1,63 @@
+from haystack import Document
+from haystack.nodes import OpenAIAnswerGenerator, EmbeddingRetriever, PromptTemplate
+
+from default_config import suggestion_category, suggestion_name, leading_phrase, suggestion_model, suggestion_max_tokens, \
+    suggestion_presence_penalty, suggestion_frequency_penalty, suggestion_top_k, suggestion_temperature, \
+    suggestion_retriever_embeddings_model
+from document_stores.InventoryItemStore import InventoryItemStore
+from tool_pipelines.SimpleGenerativeQAPipeline import SimpleGenerativeQAPipeline
+
+
+class InventoryItemSelectionPipeline(SimpleGenerativeQAPipeline):
+    NAME = suggestion_name
+    DESCRIPTION = f"This tool determines the most fitting {suggestion_category} based on its description."
+
+    def __init__(self, data_list_of_dict, llm_key):
+        """
+        Sets the pipeline for the model. The pipeline consists of a retriever and a generator.
+        The retriever is used to find the most relevant messages to the question.
+        The generator is used to generate an answer to the question based on the retrieved messages.
+        The document store is used to store the messages.
+        """
+        self.wine_store, document_store_is_new = InventoryItemStore()
+        self.retriever = EmbeddingRetriever(embedding_model=suggestion_retriever_embeddings_model,
+                                            document_store=self.wine_store,
+                                            api_key=llm_key)
+        self.write_data_to_document_store_and_update_embeddings(data_list_of_dict, document_store_is_new)
+        prompt_template = PromptTemplate(
+            prompt=f"You are an AI guide. Your purpose is to present a fitting {suggestion_category} to the client. "
+                   f"You will be given a description of a desired {suggestion_category} and fitting options in the context. "
+                   "ONLY CHOOSE FROM THE OPTIONS IN THE CONTEXT! "
+                   "RESPONSE FORMAT: \n"
+                   f"{leading_phrase} \n"
+                   "SUGGESTION: "
+                   f"Name: <name of the chosen {suggestion_category}> "
+                   f"Description: <details about the {suggestion_category}>\n"
+                   "\n\nCONTEXT:\n"
+                   "{context}"
+                   "\n\nCLIENT QUERY:\n"
+                   "{query}\n"
+        )
+        self.generator = OpenAIAnswerGenerator(
+            prompt_template=prompt_template,
+            api_key=llm_key,
+            model=suggestion_model,
+            max_tokens=suggestion_max_tokens,
+            presence_penalty=suggestion_presence_penalty,
+            frequency_penalty=suggestion_frequency_penalty,
+            top_k=suggestion_top_k,
+            temperature=suggestion_temperature
+        )
+        super().__init__(generator=self.generator,
+                         retriever=self.retriever)
+
+    def write_data_to_document_store_and_update_embeddings(self, data_list_of_dict: list, document_store_is_new: bool):
+        if document_store_is_new:
+            if 'meta' in data_list_of_dict[0].keys():
+                documents = [Document(content=row['content'], meta=row['meta']) for row in data_list_of_dict]
+            else:
+                documents = [Document(content=row['content']) for row in data_list_of_dict]
+            self.wine_store.write_documents(documents)
+            print('\nData written to document store.\n')
+        self.wine_store.update_embeddings(self.retriever)
+        print('Retriever set up.')
