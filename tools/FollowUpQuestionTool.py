@@ -1,7 +1,7 @@
 from haystack.nodes import PromptTemplate
 
 from ConfigLoader import config
-from src.QuestionSuggestionPipeline.tool_pipelines.SimpleGenerativePromptNode import SimpleGenerativePromptNode
+from tool_pipelines.SimpleGenerativePromptNode import SimpleGenerativePromptNode
 
 
 class FollowUpQuestionPromptNode(SimpleGenerativePromptNode):

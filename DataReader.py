@@ -7,7 +7,10 @@ from ConfigLoader import config
 
 
 def read_kaggle_data() -> DataFrame:
-    df = pd.read_csv(os.path.join('data', 'kaggle', 'winemag-data-130k-v2.csv')).head(100)
+    if 'DEV_MODE' in os.environ and os.getenv('DEV_MODE'):
+        df = pd.read_csv(os.path.join('data', 'kaggle', 'winemag-data-130k-v2.csv')).head(100)
+    else:
+        df = pd.read_csv(os.path.join('data', 'kaggle', 'winemag-data-130k-v2.csv'))
     return df
 
 

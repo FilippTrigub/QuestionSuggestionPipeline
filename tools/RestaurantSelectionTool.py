@@ -1,9 +1,9 @@
 from haystack import Document
 from haystack.nodes import OpenAIAnswerGenerator, EmbeddingRetriever, PromptTemplate
 
-from src.QuestionSuggestionPipeline.document_stores.InventoryItemStore import InventoryItemStore
+from document_stores.InventoryItemStore import InventoryItemStore
 from ConfigLoader import config
-from src.QuestionSuggestionPipeline.tool_pipelines.SimpleGenerativeQAPipeline import SimpleGenerativeQAPipeline
+from tool_pipelines.SimpleGenerativeQAPipeline import SimpleGenerativeQAPipeline
 
 
 class InventoryItemSelectionPipeline(SimpleGenerativeQAPipeline):
