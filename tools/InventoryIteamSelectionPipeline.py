@@ -23,9 +23,11 @@ class InventoryItemSelectionPipeline(SimpleGenerativeQAPipeline):
                                             api_key=llm_key)
         self.write_data_to_document_store_and_update_embeddings(data_list_of_dict, document_store_is_new)
         prompt_template = PromptTemplate(
-            prompt=f"You are an AI guide. Your purpose is to present a fitting {config.suggestion_category} to the client. "
+            prompt=f"You are an AI recommendation assistant. "
+                   f"Your purpose is to present a fitting {config.suggestion_category} to the client. "
                    f"You will be given a description of a desired {config.suggestion_category} and fitting options in the context. "
-                   "ONLY CHOOSE FROM THE OPTIONS IN THE CONTEXT! "
+                   "ONLY CHOOSE FROM THE OPTIONS IN THE CONTEXT. "
+                   f"YOU ARE NOT ALLOWED TO SUGGEST A {config.suggestion_category}, WHICH IS NOT IN THE CONTEXT. "
                    "RESPONSE FORMAT: \n"
                    f"{config.leading_phrase} \n"
                    "SUGGESTION: "

@@ -17,30 +17,16 @@ suggestion_category: "<YOUR_ITEM>"
 all_useful_attributes:
   - "title"
   - "description"
-  - "price"
-  - "categoryName"
-  - "address"
-  - "totalScore"
-  - "permanentlyClosed"
-  - "temporarilyClosed"
-  - "categories"
-  - "reviewsDistribution"
-  - "reviewsCount"
-  - "reviewContext"
-  - "reviewDetailedRating"
-  - "text"
 criteria_for_selection:
   - "title"
   - "description"
-  - "category"
-  - "price"
 
 # bot modes
 bot_modes:
   - "quick"
   - "advanced"
 specifications_threshold_modes:
-  quick: "2"
+  quick: "3"
   advanced: "6"
 
 # key_phrases
@@ -66,7 +52,7 @@ suggestion_max_tokens: 300
 suggestion_presence_penalty: 0.1
 suggestion_frequency_penalty: 0.1
 suggestion_top_k: 1
-suggestion_temperature: 0.1
+suggestion_temperature: 0
 
 # response patterns
 specifications_phrase: "SPECIFICATIONS"
