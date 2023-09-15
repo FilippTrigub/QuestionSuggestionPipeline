@@ -1,16 +1,14 @@
 from haystack import Document
 from haystack.nodes import OpenAIAnswerGenerator, EmbeddingRetriever, PromptTemplate
 
-from default_config import suggestion_category, suggestion_name, leading_phrase, suggestion_model, suggestion_max_tokens, \
-    suggestion_presence_penalty, suggestion_frequency_penalty, suggestion_top_k, suggestion_temperature, \
-    suggestion_retriever_embeddings_model
-from document_stores.InventoryItemStore import InventoryItemStore
-from tool_pipelines.SimpleGenerativeQAPipeline import SimpleGenerativeQAPipeline
+from src.QuestionSuggestionPipeline.document_stores.InventoryItemStore import InventoryItemStore
+from ConfigLoader import config
+from src.QuestionSuggestionPipeline.tool_pipelines.SimpleGenerativeQAPipeline import SimpleGenerativeQAPipeline
 
 
 class InventoryItemSelectionPipeline(SimpleGenerativeQAPipeline):
-    NAME = suggestion_name
-    DESCRIPTION = f"This tool determines the most fitting {suggestion_category} based on its description."
+    NAME = config.suggestion_name
+    DESCRIPTION = f"This tool determines the most fitting {config.suggestion_category} based on its description."
 
     def __init__(self, data_list_of_dict, llm_key):
         """
@@ -20,19 +18,19 @@ class InventoryItemSelectionPipeline(SimpleGenerativeQAPipeline):
         The document store is used to store the messages.
         """
         self.wine_store, document_store_is_new = InventoryItemStore()
-        self.retriever = EmbeddingRetriever(embedding_model=suggestion_retriever_embeddings_model,
+        self.retriever = EmbeddingRetriever(embedding_model=config.suggestion_retriever_embeddings_model,
                                             document_store=self.wine_store,
                                             api_key=llm_key)
         self.write_data_to_document_store_and_update_embeddings(data_list_of_dict, document_store_is_new)
         prompt_template = PromptTemplate(
-            prompt=f"You are an AI guide. Your purpose is to present a fitting {suggestion_category} to the client. "
-                   f"You will be given a description of a desired {suggestion_category} and fitting options in the context. "
+            prompt=f"You are an AI guide. Your purpose is to present a fitting {config.suggestion_category} to the client. "
+                   f"You will be given a description of a desired {config.suggestion_category} and fitting options in the context. "
                    "ONLY CHOOSE FROM THE OPTIONS IN THE CONTEXT! "
                    "RESPONSE FORMAT: \n"
-                   f"{leading_phrase} \n"
+                   f"{config.leading_phrase} \n"
                    "SUGGESTION: "
-                   f"Name: <name of the chosen {suggestion_category}> "
-                   f"Description: <details about the {suggestion_category}>\n"
+                   f"Name: <name of the chosen {config.suggestion_category}> "
+                   f"Description: <details about the {config.suggestion_category}>\n"
                    "\n\nCONTEXT:\n"
                    "{context}"
                    "\n\nCLIENT QUERY:\n"
@@ -41,12 +39,12 @@ class InventoryItemSelectionPipeline(SimpleGenerativeQAPipeline):
         self.generator = OpenAIAnswerGenerator(
             prompt_template=prompt_template,
             api_key=llm_key,
-            model=suggestion_model,
-            max_tokens=suggestion_max_tokens,
-            presence_penalty=suggestion_presence_penalty,
-            frequency_penalty=suggestion_frequency_penalty,
-            top_k=suggestion_top_k,
-            temperature=suggestion_temperature
+            model=config.suggestion_model,
+            max_tokens=config.suggestion_max_tokens,
+            presence_penalty=config.suggestion_presence_penalty,
+            frequency_penalty=config.suggestion_frequency_penalty,
+            top_k=config.suggestion_top_k,
+            temperature=config.suggestion_temperature
         )
         super().__init__(generator=self.generator,
                          retriever=self.retriever)

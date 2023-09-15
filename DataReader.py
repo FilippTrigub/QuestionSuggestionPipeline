@@ -3,11 +3,11 @@ import os
 import pandas as pd
 from pandas import DataFrame
 
-from default_config import all_useful_attributes
+from ConfigLoader import config
 
 
 def read_kaggle_data() -> DataFrame:
-    df = pd.read_csv(os.path.join('data', 'kaggle', 'winemag-data-130k-v2.csv'))
+    df = pd.read_csv(os.path.join('data', 'kaggle', 'winemag-data-130k-v2.csv')).head(100)
     return df
 
 
@@ -24,6 +24,8 @@ def read_data_to_df(path: str) -> DataFrame:
 def read_data_to_dict(path: str) -> pd.DataFrame:
     if 'app' in os.listdir() and 'data' not in os.listdir():
         path = os.path.join('app', path)
+    if os.getenv('DEV_MODE'):
+        return pd.read_json(path).head(100)
     return pd.read_json(path)
 
 
@@ -32,7 +34,7 @@ def reduce_dict_attributes(input_list_of_dicts: list) -> list:
 
     for input_list_item in input_list_of_dicts:
         temp_dict = {}
-        for attribute in all_useful_attributes:
+        for attribute in config.all_useful_attributes:
             if attribute in input_list_item.keys():
                 temp_dict[attribute] = input_list_item[attribute]
             else:
