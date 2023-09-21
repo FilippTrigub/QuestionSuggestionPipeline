@@ -17,9 +17,9 @@ class InventoryItemSelectionPipeline(SimpleGenerativeQAPipeline):
         The generator is used to generate an answer to the question based on the retrieved messages.
         The document store is used to store the messages.
         """
-        self.wine_store, document_store_is_new = InventoryItemStore()
+        self.inventory_store, document_store_is_new = InventoryItemStore()
         self.retriever = EmbeddingRetriever(embedding_model=config.suggestion_retriever_embeddings_model,
-                                            document_store=self.wine_store,
+                                            document_store=self.inventory_store,
                                             api_key=llm_key)
         self.write_data_to_document_store_and_update_embeddings(data_list_of_dict, document_store_is_new)
         prompt_template = PromptTemplate(
@@ -57,7 +57,7 @@ class InventoryItemSelectionPipeline(SimpleGenerativeQAPipeline):
                 documents = [Document(content=row['content'], meta=row['meta']) for row in data_list_of_dict]
             else:
                 documents = [Document(content=row['content']) for row in data_list_of_dict]
-            self.wine_store.write_documents(documents)
+            self.inventory_store.write_documents(documents)
             print('\nData written to document store.\n')
-        self.wine_store.update_embeddings(self.retriever)
+        self.inventory_store.update_embeddings(self.retriever)
         print('Retriever set up.')
