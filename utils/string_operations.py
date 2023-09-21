@@ -13,7 +13,7 @@ def format_query(query):
 
 def extract_response_statements_from_string(response: str) -> Dict[str, Optional[str]]:
     results = {}
-    for key_phrase, pattern in config.key_phrases_patterns.__dict__.keys():
+    for key_phrase, pattern in config.key_phrases_patterns.__dict__.items():
         match = re.search(pattern, response)
         results[key_phrase] = match.group(1).strip() if match else None
 
