@@ -1,7 +1,5 @@
-from haystack import Document
-from haystack.nodes import OpenAIAnswerGenerator, EmbeddingRetriever, PromptTemplate
+from haystack.nodes import OpenAIAnswerGenerator, PromptTemplate
 
-from retrievers.InventoryItemStore import InventoryItemStore
 from ConfigLoader import config
 from base_pipelines.SimpleGenerativeQAPipeline import SimpleGenerativeQAPipeline
 
