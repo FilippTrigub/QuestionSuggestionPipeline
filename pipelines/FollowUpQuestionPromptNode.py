@@ -1,23 +1,18 @@
 from haystack.nodes import PromptTemplate
 
 from ConfigLoader import config
-from tool_pipelines.SimpleGenerativePromptNode import SimpleGenerativePromptNode
+from base_pipelines.SimpleGenerativePromptNode import SimpleGenerativePromptNode
 
 
 class FollowUpQuestionPromptNode(SimpleGenerativePromptNode):
-    NAME = config.follow_up_question_tool_name
-    DESCRIPTION = "This tool extracts the specifications made by the user and formulates a follow up question."
 
     def __init__(self, llm_key):
-        """
-
-        """
         prompt_template = PromptTemplate(
-            prompt=f"You are an AI guide. "
+            prompt=f"You are an AI product assistant. "
                    f"You must figure out, what kind of {config.suggestion_category} the client is looking for. "
                    "DO ONLY USE INFORMATION PROVIDED BY THE CLIENT. "
                    f"Inquire the client to specify his or her wishes regarding the {config.suggestion_category}. "
-                   f"You can ask for input regarding the following criteria: {', '.join(config.criteria_for_selection)}. \n"
+                   f"You can ask for input regarding the following criteria: {', '.join(config.selection_attributes)}. \n"
                    "Summarize the clients wishes taken from your memory and the client inputs each time you answer the client. "
                    "RESPONSE FORMAT: \n"
                    f"{config.leading_phrase} \n"
@@ -46,7 +41,7 @@ class FollowUpQuestionPromptNode(SimpleGenerativePromptNode):
         )
 
         super().__init__(default_prompt_template=prompt_template,
-                         model_name_or_path=config.tool_generative_model,
+                         model_name_or_path=config.follow_up_question_tool_generative_model,
                          api_key=llm_key,
                          model_kwargs=config.follow_up_question_model_settings.__dict__
                          )

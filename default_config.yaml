@@ -4,9 +4,9 @@ dev_data_path: "<YOUR PATH>"
 
 # document store settings
 document_store_directory: "document_store"
-default_faiss_sql_url: "sqlite:///document_store/faiss_document_store.db"
-faiss_index_path: "document_store/faiss_document_index.faiss"
-faiss_config_path: "document_store/faiss_document_config.json"
+default_faiss_sql_url: "sqlite:///document_store//faiss_document_store.db"
+faiss_index_path: "document_store//faiss_document_index.faiss"
+faiss_config_path: "document_store//faiss_document_config.json"
 default_faiss_index_factory_str: "Flat"
 default_embedding_dim: 768
 default_return_embedding: false
@@ -17,9 +17,11 @@ suggestion_category: "<YOUR_ITEM>"
 all_useful_attributes:
   - "title"
   - "description"
-criteria_for_selection:
+selection_attributes:
   - "title"
   - "description"
+meta_data_attributes:
+  - 'title'
 
 # bot modes
 bot_modes:
@@ -36,7 +38,7 @@ specifications_designator_search_pattern: "Specifications: (.*)"
 
 # Follow-up Question tool settings
 follow_up_question_tool_name: "Question"
-tool_generative_model: "gpt-3.5-turbo"
+follow_up_question_tool_generative_model: "gpt-3.5-turbo"
 follow_up_question_model_settings:
   max_tokens: 300
   presence_penalty: 0.1
@@ -48,11 +50,30 @@ follow_up_question_model_settings:
 suggestion_name: "Selection"
 suggestion_retriever_embeddings_model: "sentence-transformers/all-mpnet-base-v2"
 suggestion_model: "text-davinci-003"
-suggestion_max_tokens: 300
+suggestion_max_tokens: 900
 suggestion_presence_penalty: 0.1
 suggestion_frequency_penalty: 0.1
 suggestion_top_k: 1
 suggestion_temperature: 0
+
+# Minimal Decision Prompt Node
+minimal_decision_pipeline_name: "Search category"
+minimal_decision_phrase: "CATEGORY"
+object_for_comparison: "OBJECT FOR COMPARISON"
+minimal_decision_categories:
+  Similarity: "The input contains a request to find a wine similar to a stated wine."
+  Inventory: "The input contains a request to find a wine based on description and specifications."
+minimal_decision_tool_name: "Category Choice"
+minimal_decision_tool_generative_model: "gpt-3.5-turbo"
+minimal_decision_model_settings:
+  max_tokens: 300
+  presence_penalty: 0.0
+  frequency_penalty: 0.0
+  top_k: 1
+  temperature: 1
+
+# Similarity Search Pipeline
+similarity_search_pipeline_name: "Similarity search"
 
 # response patterns
 specifications_phrase: "SPECIFICATIONS"
@@ -62,3 +83,4 @@ key_phrases_patterns:
   SPECIFICATIONS: "SPECIFICATIONS:\\s*(.*?)\\s*(?:FOLLOW_UP_QUESTION:|RESPONSE:|$)"
   FOLLOW_UP_QUESTION: "FOLLOW_UP_QUESTION:\\s*(.*?)\\s*(?:TOOL:|Thought:|$)"
   SUGGESTION: "SUGGESTION:\\s*(.*?)\\s*(?:TOOL:|Thought:|$)"
+

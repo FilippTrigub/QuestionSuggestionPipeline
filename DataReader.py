@@ -41,9 +41,13 @@ def reduce_dict_attributes(input_list_of_dicts: list) -> list:
 
 def reformat_data_for_document_store(input_df: pd.DataFrame) -> list:
     transformed_lst = []
-    concat_df = input_df.astype(str).stack().groupby(level=0).apply(', '.join)
-    for item in concat_df.to_list():
-        transformed_lst.append({'content': item})
+    concat_df = input_df.astype(str).apply(lambda row: ', '.join([f"{key}: {value}" for key, value in row.items()]),
+                                           axis=1).to_frame(name="concatenated")
+    for index, row in concat_df.iterrows():
+        transformed_lst.append({
+            'content': row['concatenated'],
+            'meta': {key: input_df[key][index] for key in config.meta_data_attributes}
+        })
     return transformed_lst
 
 
