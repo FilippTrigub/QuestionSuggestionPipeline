@@ -57,16 +57,15 @@ suggestion_frequency_penalty: 0.1
 suggestion_top_k: 1
 suggestion_temperature: 0
 
-# Minimal Decision Prompt Node
-minimal_decision_pipeline_name: "Search category"
-minimal_decision_phrase: "CATEGORY"
-object_for_comparison: "OBJECT FOR COMPARISON"
-minimal_decision_categories:
+# Pipeline Selection Prompt Node
+pipeline_selection_pipeline_name: "Pipeline selection"
+selected_pipeline_phrase: "CATEGORY"
+object_for_comparison_phrase: "OBJECT FOR COMPARISON"
+pipeline_selection_pipelines:
   Similarity: "The input contains a request to find a wine similar to a stated wine."
   Inventory: "The input contains a request to find a wine based on description and specifications."
-minimal_decision_tool_name: "Category Choice"
-minimal_decision_tool_generative_model: "gpt-3.5-turbo"
-minimal_decision_model_settings:
+pipeline_selection_generative_model: "gpt-3.5-turbo"
+pipeline_selection_model_settings:
   max_tokens: 300
   presence_penalty: 0.0
   frequency_penalty: 0.0

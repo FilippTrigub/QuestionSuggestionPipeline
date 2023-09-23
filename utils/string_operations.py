@@ -75,8 +75,8 @@ def extract_category_and_object_of_comparison(response: str) -> dict:
 
         # Return the extracted information as a dictionary
         return {
-            config.minimal_decision_phrase: clean_string(category),
-            config.object_for_comparison: clean_string(object_for_comparison)
+            config.selected_pipeline_phrase: clean_string(category),
+            config.object_for_comparison_phrase: clean_string(object_for_comparison)
         }
     except Exception as e:
         # Handle any unexpected error and raise it with a custom message
