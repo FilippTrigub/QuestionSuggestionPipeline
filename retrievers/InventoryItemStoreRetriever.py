@@ -51,7 +51,6 @@ class InventoryItemStoreRetriever(EmbeddingRetriever):
                     difference += 1
             return difference
 
-
         for doc in self.inventory_store.get_all_documents():
             if (len(query_title) >= len(doc.meta['title']) // 2
                     and (query_title in doc.meta['title']
