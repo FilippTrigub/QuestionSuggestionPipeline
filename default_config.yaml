@@ -49,6 +49,7 @@ follow_up_question_model_settings:
 # Inventory Item Selection tool settings
 suggestion_name: "Selection"
 suggestion_retriever_embeddings_model: "sentence-transformers/all-mpnet-base-v2"
+suggestion_retriever_top_k: 5
 suggestion_model: "text-davinci-003"
 suggestion_max_tokens: 900
 suggestion_presence_penalty: 0.1

@@ -12,7 +12,8 @@ class InventoryItemStoreRetriever(EmbeddingRetriever):
 
         super().__init__(embedding_model=config.suggestion_retriever_embeddings_model,
                          document_store=self.inventory_store,
-                         api_key=llm_key)
+                         api_key=llm_key,
+                         top_k=config.suggestion_retriever_top_k)
         self.write_data_to_document_store_and_update_embeddings(data_list_of_dicts, self.document_store_is_new)
 
     def write_data_to_document_store_and_update_embeddings(self, data_list_of_dict: list, document_store_is_new: bool):
