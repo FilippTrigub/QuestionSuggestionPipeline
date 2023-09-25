@@ -2,6 +2,7 @@ from haystack.document_stores import FAISSDocumentStore
 
 from ConfigLoader import config
 from utils.SingletonMeta import SingletonMeta
+from utils.file_management import clean_directory
 
 
 class InventoryItemStore(metaclass=SingletonMeta):
@@ -17,6 +18,7 @@ class InventoryItemStore(metaclass=SingletonMeta):
             document_store_is_new = False
         except (TypeError, ValueError):
             # todo clean_directory(document_store_directory)
+            clean_directory(config.document_store_directory)
             # init DocumentStore
             document_store = FAISSDocumentStore(
                 sql_url=config.default_faiss_sql_url,
@@ -25,7 +27,7 @@ class InventoryItemStore(metaclass=SingletonMeta):
                 return_embedding=config.default_return_embedding,
                 similarity=config.default_similarity
             )
-            # Save the DocumentStore
-            document_store.save(index_path=config.faiss_index_path, config_path=config.faiss_config_path)
+            # # Save the DocumentStore
+            # document_store.save(index_path=config.faiss_index_path, config_path=config.faiss_config_path)
 
         return document_store, document_store_is_new

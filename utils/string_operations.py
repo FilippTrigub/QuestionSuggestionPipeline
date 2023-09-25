@@ -38,6 +38,12 @@ def add_specifications(query, specifications):
     return query
 
 
+def add_comparison_description(query, comparison_desription):
+    if comparison_desription:
+        return query + f'\nChoose one similar to the following description: {comparison_desription}'
+    return query
+
+
 def construct_answer(suggestion, follow_up_question):
     answer = ''
     if suggestion:
@@ -46,3 +52,40 @@ def construct_answer(suggestion, follow_up_question):
     answer = (answer
               + follow_up_question)
     return answer
+
+
+def extract_category_and_object_of_comparison(response: str) -> dict:
+    try:
+        # Initialize variables to hold the extracted category and object_for_comparison
+        category = None
+        object_for_comparison = None
+
+        # Split the response by lines and loop through each line
+        for line in response.split('\n'):
+            # Check if the line starts with "category:" and extract the category
+            if line.strip().lower().startswith("category:"):
+                category = line.split(":", 1)[1].strip()
+            # Check if the line starts with "object for comparison:" and extract the object_for_comparison
+            elif line.strip().lower().startswith("object for comparison:"):
+                object_for_comparison = line.split(":", 1)[1].strip()
+
+        # Check if category is extracted, if not raise a ValueError
+        if category is None:
+            raise ValueError("Category not found in the provided response.")
+
+        # Return the extracted information as a dictionary
+        return {
+            config.selected_pipeline_phrase: clean_string(category),
+            config.object_for_comparison_phrase: clean_string(object_for_comparison)
+        }
+    except Exception as e:
+        # Handle any unexpected error and raise it with a custom message
+        raise ValueError(f"An error occurred while extracting information: {str(e)}")
+
+
+def clean_string(input_string: str) -> str:
+    # Define a regex pattern to match allowed characters
+    pattern = re.compile('[^a-zA-Z0-9\-\[\]()\s]')
+    # Substitute disallowed characters with an empty string
+    cleaned_string = pattern.sub('', input_string)
+    return cleaned_string
