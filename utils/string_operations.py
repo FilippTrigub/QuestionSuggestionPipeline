@@ -49,8 +49,9 @@ def construct_answer(suggestion, follow_up_question):
     if suggestion:
         answer = (f"Based on your input I would suggest: \n{suggestion}\n\n"
                   f"Not your taste? Just tell me more about your wishes!\n\n")
-    answer = (answer
-              + follow_up_question)
+    if follow_up_question:
+        answer = (answer
+                  + follow_up_question)
     return answer
 
 
