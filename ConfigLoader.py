@@ -55,4 +55,4 @@ def find_file_path(root_dir: str, target_file_name: str) -> str:
 
 
 config = load_config(qs_config_path=find_file_path('.', 'default_config.yaml'),
-                     main_config_path=find_file_path('.', 'src/config.yaml'))
+                     main_config_path=find_file_path('.', 'config.yaml'))

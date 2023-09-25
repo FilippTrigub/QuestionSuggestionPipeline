@@ -18,7 +18,7 @@ class InventoryItemStore(metaclass=SingletonMeta):
             document_store_is_new = False
         except (TypeError, ValueError):
             # todo clean_directory(document_store_directory)
-            clean_directory(config.document_store_directory)
+            # clean_directory(config.document_store_directory)
             # init DocumentStore
             document_store = FAISSDocumentStore(
                 sql_url=config.default_faiss_sql_url,
