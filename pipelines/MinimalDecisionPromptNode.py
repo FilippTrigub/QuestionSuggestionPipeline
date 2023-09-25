@@ -11,7 +11,6 @@ class MinimalDecisionPromptNode(SimpleGenerativePromptNode):
         prompt_template = PromptTemplate(
             prompt=f"You are an AI tasked with categorizing {config.suggestion_category}-related requests. "
                    f"Your goal is to determine whether each input falls into the following categories: "
-                   # f"{', '.join(config.pipeline_selection_pipelines.__dict__.keys())}. "
                    "\nCATEGORIES:\n"
                    + '\n'.join([key + ': ' + value
                                 for key, value in config.pipeline_selection_pipelines.__dict__.items()]) +
